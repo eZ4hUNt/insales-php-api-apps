@@ -37,7 +37,27 @@
 ```
   $content = $tpl->result['mytpl'];
   $tpl->load_template('_main.tpl');
+  $tpl->set('{content}', $content);
+  $tpl->compile('content');
+  echo $tpl->result['content'];
+  $tpl->clear();
+```
+
+Можно использовать конструкцию:
+```
+$tpl->set_block ( '#\[block\](.+?)\[\/block\]#is', '\\1' );
+```
+для вывода или скрытия той или иной информации в шаблоне. Например:
+```
+  $show_block = true;
+  $tpl->load_template('_main.tpl');
   $tpl->set('{mytpl}', $content);
+  if($show_block == true){ // Отображаем или скрываем информацию вмежду тегом [block]Информация[/block]
+    $tpl->set('[block]', '');
+    $tpl->set('[/block]', '');
+  }else{
+    $tpl->set_block("'\\[block\\].*?\\[/block\\]'si", '');
+  }
   $tpl->compile('content');
   echo $tpl->result['content'];
   $tpl->clear();
