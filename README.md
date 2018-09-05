@@ -63,7 +63,7 @@ $tpl->set_block ( '#\[block\](.+?)\[\/block\]#is', '\\1' );
   $tpl->clear();
 ```
 
-** Боевой пример **
+**Боевой пример**
 Шаблонизатор можно использовать вместе с циклом, например, для вывода списка товаров. 
 ```
 // Компилируем шаблон списка товаров
@@ -82,6 +82,7 @@ $tpl->set_block ( '#\[block\](.+?)\[\/block\]#is', '\\1' );
   }
   $products_items = $tpl->result['products_items'];
   $tpl->clear();
+  $db->free();
 
 // Компилируем шаблон страницы товаров
   $tpl->load_template('products.tpl');
@@ -96,6 +97,7 @@ $tpl->set_block ( '#\[block\](.+?)\[\/block\]#is', '\\1' );
   $tpl->compile('content');
   echo $tpl->result['content'];
   $tpl->clear();
+  $tpl->global_clear();
 ```
 
 И итоге у нас есть три шаблона: 
@@ -119,3 +121,22 @@ $tpl->set_block ( '#\[block\](.+?)\[\/block\]#is', '\\1' );
   {content}
 ```
 
+## Работа с базой данных
+В заготовке предусмотрен класс для работы с БД. Несколько примеров:
+```
+// Пример #1 - Выборка нескольких позиций
+  $sql_result = $db->query('SELECT * FROM products');
+  while($products = $db->get_row($sql_result)){
+    print_r($products);
+  }
+  $db->free();
+  
+// Пример #2 - Выборка одной позиции
+  $product = $db->super_query('SELECT * FROM products id="1"');
+  print_r($product);
+  
+// Пример #3 - Добавление, редактирование, удаление
+  $db->query('INSERT INTO products (title, description, token) values ("Заголовок", "Описание")');
+  $db->query('UPDATE products SET title="Новый заголовок" WHERE id="1"');
+  $db->query('DELETE FROM products WHERE id="1"');
+```
