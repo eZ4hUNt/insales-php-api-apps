@@ -21,3 +21,24 @@
 6. Запускаем установку приложение из бэк-офиса InSales
 
 ## Работа с шаблонизатором
+```
+  $tpl->load_template('mytpl.tpl'); // Подключаем шаблон mytpl.tpl в папке template
+  $tpl->set('{helloworld}', 'Привет Мир!'); // Подключаем переменную {helloworld} в шаблоне mytpl.tpl и задаем ей значение
+  $tpl->compile('mytpl'); // Компилируем шаблон в переменную $tpl->result['mytpl']
+  $tpl->clear();
+```
+
+Далее содержимое шаблона можно вывести на странице с помощью:
+```
+  echo $tpl->result['mytpl'];
+```
+
+или передать в другой шаблон:
+```
+  $content = $tpl->result['mytpl'];
+  $tpl->load_template('_main.tpl');
+  $tpl->set('{mytpl}', $content);
+  $tpl->compile('content');
+  echo $tpl->result['content'];
+  $tpl->clear();
+```
