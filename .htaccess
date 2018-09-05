@@ -1,0 +1,5 @@
+	DirectoryIndex stats.php
+	AddDefaultCharset utf-8
+
+	RewriteEngine On
+	RewriteBase /
