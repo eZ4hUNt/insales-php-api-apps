@@ -140,3 +140,6 @@ $tpl->set_block ( '#\[block\](.+?)\[\/block\]#is', '\\1' );
   $db->query('UPDATE products SET title="Новый заголовок" WHERE id="1"');
   $db->query('DELETE FROM products WHERE id="1"');
 ```
+
+## Сам скрипт и пример на GitHub
+https://github.com/eZ4hUNt/insales-php-api-apps/
