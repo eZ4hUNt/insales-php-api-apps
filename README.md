@@ -62,3 +62,60 @@ $tpl->set_block ( '#\[block\](.+?)\[\/block\]#is', '\\1' );
   echo $tpl->result['content'];
   $tpl->clear();
 ```
+
+** Боевой пример **
+Шаблонизатор можно использовать вместе с циклом, например, для вывода списка товаров. 
+```
+// Компилируем шаблон списка товаров
+  $tpl->load_template('products_item.tpl');
+  $sql_result = $db->query('SELECT * FROM products');
+  while($products = $db->get_row($sql_result)){
+    if($products['show'] == 1){ // Отображаем или скрываем товар
+      $tpl->set('[product_show]', '');
+      $tpl->set('[/product_show]', '');
+    }else{
+      $tpl->set_block("'\\[product_show\\].*?\\[/product_show\\]'si", '');
+    }
+    $tpl->set('{title}', $products['title']);
+    $tpl->set('{description}', $products['description']);
+    $tpl->compile('products_items');
+  }
+  $products_items = $tpl->result['products_items'];
+  $tpl->clear();
+
+// Компилируем шаблон страницы товаров
+  $tpl->load_template('products.tpl');
+  $tpl->set('{products_items}', $products_items);
+  $tpl->compile('products');
+  $tpl->clear();
+
+// Компилируем и выводим шаблон
+  $tpl->load_template('_main.tpl');
+  $tpl->set('{info}', 'Информация');
+  $tpl->set('{content}', $tpl->result['products']);
+  $tpl->compile('content');
+  echo $tpl->result['content'];
+  $tpl->clear();
+```
+
+И итоге у нас есть три шаблона: 
++ *products_item.tpl* - Список товаров
++ *products.tpl* - Шаблон товаров
++ *_main.tpl* - Основной шаблон, в котором мы собираем все остальные
+
+Иметь ини будут следующий вид:
+```
+// Шаблон products_item.tpl
+  [product_show]
+    {title}
+    {description}
+  [/product_show]
+  
+// Шаблон products.tpl
+  {products_items}
+    
+// Шаблон _main.tpl
+  {info}
+  {content}
+```
+
